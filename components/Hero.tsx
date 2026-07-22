@@ -5,13 +5,11 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { motion, useReducedMotion } from 'framer-motion';
 import { 
-  MapPin, 
   Sparkles, 
   ChevronRight, 
   ChevronLeft,
   ArrowRight,
   ExternalLink,
-  ShieldCheck,
   Compass
 } from 'lucide-react';
 
@@ -93,7 +91,7 @@ export default function Hero() {
           {/* Eyebrow Badge (Apple Wide Tracking) */}
           <motion.div 
             key={`badge-${currentSlide}`}
-            initial={shouldReduceMotion ? false : { opacity: 0, y: 15 }}
+            initial={shouldReduceMotion ? undefined : { opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/20 text-white text-xs font-bold uppercase tracking-[0.2em] backdrop-blur-xl"
@@ -105,7 +103,7 @@ export default function Hero() {
           {/* Title (Apple-Style Giant Gradient Text Clipping) */}
           <motion.h1 
             key={`title-${currentSlide}`}
-            initial={shouldReduceMotion ? false : { opacity: 0, y: 25 }}
+            initial={shouldReduceMotion ? undefined : { opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
             className="font-heading text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.08] text-transparent bg-clip-text bg-gradient-to-r from-white via-stone-100 to-brand-300 drop-shadow-2xl"
@@ -116,7 +114,7 @@ export default function Hero() {
           {/* Subtitle */}
           <motion.p 
             key={`sub-${currentSlide}`}
-            initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
+            initial={shouldReduceMotion ? undefined : { opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-stone-300 text-base sm:text-lg md:text-xl font-normal leading-relaxed max-w-2xl"
@@ -127,15 +125,15 @@ export default function Hero() {
           {/* Action CTAs (Emil Kowalski Physics) */}
           <motion.div 
             key={`cta-${currentSlide}`}
-            initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
+            initial={shouldReduceMotion ? undefined : { opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
             className="flex flex-wrap items-center gap-4 pt-4"
           >
             {slide.isExternal ? (
               <motion.a
-                whileHover={{ scale: 1.03, transition: { type: "spring", stiffness: 400, damping: 25 } }}
-                whileTap={{ scale: 0.97 }}
+                whileHover={shouldReduceMotion ? undefined : { scale: 1.03, transition: { type: "spring", stiffness: 400, damping: 25 } }}
+                whileTap={shouldReduceMotion ? undefined : { scale: 0.97 }}
                 href={slide.ctaLink}
                 target="_blank"
                 rel="noreferrer"
@@ -146,8 +144,8 @@ export default function Hero() {
               </motion.a>
             ) : (
               <motion.div
-                whileHover={{ scale: 1.03, transition: { type: "spring", stiffness: 400, damping: 25 } }}
-                whileTap={{ scale: 0.97 }}
+                whileHover={shouldReduceMotion ? undefined : { scale: 1.03, transition: { type: "spring", stiffness: 400, damping: 25 } }}
+                whileTap={shouldReduceMotion ? undefined : { scale: 0.97 }}
               >
                 <Link
                   href={slide.ctaLink}
@@ -160,8 +158,8 @@ export default function Hero() {
             )}
 
             <motion.div
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
+              whileHover={shouldReduceMotion ? undefined : { scale: 1.03 }}
+              whileTap={shouldReduceMotion ? undefined : { scale: 0.97 }}
             >
               <Link
                 href="/visit"

@@ -9,11 +9,8 @@ import {
   Search, 
   Download, 
   ExternalLink, 
-  Layers, 
   Clock,
-  Sparkles,
-  Compass,
-  Building
+  Compass
 } from 'lucide-react';
 
 const FLOORS = ['Ground', '1st Floor', '2nd Floor', '3rd Floor'] as const;
@@ -194,9 +191,9 @@ export default function FloorMap({ highlightStoreId }: FloorMapProps) {
         <AnimatePresence>
           {selectedStore && (
             <motion.div 
-              initial={shouldReduceMotion ? false : { opacity: 0, y: 20, scale: 0.95 }}
+              initial={shouldReduceMotion ? undefined : { opacity: 0, y: 20, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={shouldReduceMotion ? false : { opacity: 0, y: 20, scale: 0.95 }}
+              exit={shouldReduceMotion ? undefined : { opacity: 0, y: 20, scale: 0.95 }}
               transition={{ type: "spring", stiffness: 350, damping: 25 }}
               className="absolute bottom-6 left-6 right-6 md:left-auto md:right-6 md:w-96 bg-stone-950 border border-stone-800 text-white rounded-2xl p-6 shadow-2xl z-30 space-y-4"
             >
