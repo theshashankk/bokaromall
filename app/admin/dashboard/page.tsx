@@ -1,28 +1,75 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { INITIAL_STORES, Store } from '@/lib/data';
 import { 
   ShieldCheck, 
   Plus, 
-  Edit3, 
   Trash2, 
   LogOut,
   Activity,
-  Layers
+  CheckCircle2
 } from 'lucide-react';
+
+interface AuditLog {
+  id: number;
+  action: string;
+  user: string;
+  time: string;
+}
 
 export default function AdminDashboardPage() {
   const router = useRouter();
-  const [stores, setStores] = useState<Store[]>(INITIAL_STORES);
+  const [stores, setStores] = useState<Store[]>([]);
   const [activeTab, setActiveTab] = useState<'stores' | 'map' | 'audit'>('stores');
+  const [auditLogs, setAuditLogs] = useState<AuditLog[]>([]);
 
-  const [auditLogs, setAuditLogs] = useState([
-    { id: 1, action: "Updated Store Hotspot (Reliance Smart Bazaar)", user: "admin@bokaromall.com", time: "Just now" },
-    { id: 2, action: "Published Monsoon Festival Announcement", user: "editor@bokaromall.com", time: "2 hours ago" },
-    { id: 3, action: "Added Pantaloons 40% Offer Details", user: "admin@bokaromall.com", time: "1 day ago" }
-  ]);
+  // Load dynamic data from localStorage on mount (No hardcoded mock arrays)
+  useEffect(() => {
+    // 1. Load Stores from localStorage or fallback to single source of truth
+    const savedStores = localStorage.getItem('bm_admin_stores');
+    if (savedStores) {
+      try {
+        setStores(JSON.parse(savedStores));
+      } catch (e) {
+        setStores(INITIAL_STORES);
+      }
+    } else {
+      setStores(INITIAL_STORES);
+    }
+
+    // 2. Load Dynamic Audit Logs from localStorage (defaults to empty array if none exist)
+    const savedLogs = localStorage.getItem('bm_admin_audit_logs');
+    if (savedLogs) {
+      try {
+        setAuditLogs(JSON.parse(savedLogs));
+      } catch (e) {
+        setAuditLogs([]);
+      }
+    } else {
+      setAuditLogs([]);
+    }
+  }, []);
+
+  // Save stores state to localStorage
+  const saveStoresToStorage = (updatedStores: Store[]) => {
+    setStores(updatedStores);
+    localStorage.setItem('bm_admin_stores', JSON.stringify(updatedStores));
+  };
+
+  // Log dynamic admin action and persist to localStorage
+  const logAdminAction = (actionText: string) => {
+    const newLog: AuditLog = {
+      id: Date.now(),
+      action: actionText,
+      user: "admin@bokaromall.com",
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }) + ' - ' + new Date().toLocaleDateString()
+    };
+    const updatedLogs = [newLog, ...auditLogs];
+    setAuditLogs(updatedLogs);
+    localStorage.setItem('bm_admin_audit_logs', JSON.stringify(updatedLogs));
+  };
 
   const handleLogout = () => {
     document.cookie = "bm_admin_session=; path=/; max-age=0";
@@ -30,21 +77,25 @@ export default function AdminDashboardPage() {
   };
 
   const handleUpdateHotspot = (storeId: string, x: number, y: number) => {
-    setStores(stores.map(s => s.id === storeId ? { ...s, mapHotspot: { x, y } } : s));
-    setAuditLogs([
-      {
-        id: Date.now(),
-        action: `Repositioned map hotspot for ${stores.find(s => s.id === storeId)?.name} (X: ${x}%, Y: ${y}%)`,
-        user: "admin@bokaromall.com",
-        time: "Just now"
-      },
-      ...auditLogs
-    ]);
+    const storeObj = stores.find(s => s.id === storeId);
+    const updated = stores.map(s => s.id === storeId ? { ...s, mapHotspot: { x, y } } : s);
+    saveStoresToStorage(updated);
+    logAdminAction(`Repositioned map hotspot for ${storeObj?.name || storeId} (X: ${x}%, Y: ${y}%)`);
   };
 
   const handleDeleteStore = (storeId: string) => {
-    if (confirm("Are you sure you want to delete this tenant from directory & map?")) {
-      setStores(stores.filter(s => s.id !== storeId));
+    const storeObj = stores.find(s => s.id === storeId);
+    if (confirm(`Are you sure you want to delete ${storeObj?.name} from directory & map?`)) {
+      const updated = stores.filter(s => s.id !== storeId);
+      saveStoresToStorage(updated);
+      logAdminAction(`Deleted tenant ${storeObj?.name || storeId} from store directory & interactive floor map`);
+    }
+  };
+
+  const handleClearLogs = () => {
+    if (confirm("Are you sure you want to clear system audit logs?")) {
+      setAuditLogs([]);
+      localStorage.removeItem('bm_admin_audit_logs');
     }
   };
 
@@ -96,7 +147,7 @@ export default function AdminDashboardPage() {
             activeTab === 'audit' ? 'bg-brand-700 text-white shadow' : 'bg-editorial-muted dark:bg-onyx-muted text-stone-500'
           }`}
         >
-          System Audit Logs
+          Dynamic Audit Logs ({auditLogs.length})
         </button>
       </div>
 
@@ -106,7 +157,25 @@ export default function AdminDashboardPage() {
           <div className="flex justify-between items-center">
             <h2 className="font-heading text-xl font-bold">Manage Shops & Tenants</h2>
             <button
-              onClick={() => alert("Tenant creation form initialized.")}
+              onClick={() => {
+                const name = prompt("Enter new store name:");
+                if (!name) return;
+                const newStore: Store = {
+                  id: name.toLowerCase().replace(/\s+/g, '-'),
+                  name: name,
+                  category: "fashion",
+                  floor: "Ground",
+                  tagline: "Retail Outlet at Bokaro Mall",
+                  hours: "11:00 AM - 09:30 PM",
+                  phone: "+91 62877 76111",
+                  description: "Newly added retail tenant at Bokaro Mall.",
+                  image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=800&auto=format&fit=crop",
+                  mapHotspot: { x: 50, y: 50 }
+                };
+                const updated = [...stores, newStore];
+                saveStoresToStorage(updated);
+                logAdminAction(`Added new tenant ${name} to store directory`);
+              }}
               className="bg-brand-700 hover:bg-brand-800 text-white px-4 py-2.5 rounded-xl text-xs font-bold flex items-center space-x-1 shadow"
             >
               <Plus className="w-4 h-4" />
@@ -136,14 +205,9 @@ export default function AdminDashboardPage() {
                     </td>
                     <td className="p-4 text-right space-x-2">
                       <button 
-                        onClick={() => alert(`Editing store details for ${store.name}...`)}
-                        className="p-1.5 rounded-lg bg-stone-200 dark:bg-stone-800 text-stone-700 dark:text-stone-300 hover:text-stone-900 dark:hover:text-white"
-                      >
-                        <Edit3 className="w-3.5 h-3.5" />
-                      </button>
-                      <button 
                         onClick={() => handleDeleteStore(store.id)}
                         className="p-1.5 rounded-lg bg-red-100 dark:bg-red-950 text-red-700 dark:text-red-300 hover:bg-red-200"
+                        title="Delete Tenant"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
@@ -160,7 +224,7 @@ export default function AdminDashboardPage() {
       {activeTab === 'map' && (
         <div className="space-y-6">
           <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-400 text-xs font-bold">
-            Single Source of Truth: Updating X/Y hotspot percentages here automatically updates the vector map position for visitors without code edits.
+            Single Source of Truth: Updating X/Y hotspot percentages here automatically updates the vector map position for visitors and saves to dynamic storage.
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -202,25 +266,43 @@ export default function AdminDashboardPage() {
         </div>
       )}
 
-      {/* Tab 3: System Audit Logs */}
+      {/* Tab 3: Dynamic System Audit Logs */}
       {activeTab === 'audit' && (
         <div className="bg-editorial-card dark:bg-onyx-card border border-stone-200 dark:border-stone-800 rounded-3xl p-6 space-y-4 shadow-sm">
-          <h2 className="font-heading text-xl font-bold flex items-center space-x-2">
-            <Activity className="w-5 h-5 text-brand-700 dark:text-brand-400" />
-            <span>Admin Activity Audit Trail</span>
-          </h2>
-
-          <div className="space-y-3">
-            {auditLogs.map((log) => (
-              <div key={log.id} className="p-4 rounded-xl bg-editorial-muted dark:bg-stone-900 border border-stone-200 dark:border-stone-800 flex justify-between items-center text-xs">
-                <div className="space-y-0.5">
-                  <p className="font-bold text-editorial-text dark:text-onyx-text">{log.action}</p>
-                  <p className="text-[11px] text-stone-500 dark:text-stone-400">User: {log.user}</p>
-                </div>
-                <span className="text-[11px] text-brand-700 dark:text-brand-400 font-extrabold">{log.time}</span>
-              </div>
-            ))}
+          <div className="flex justify-between items-center">
+            <h2 className="font-heading text-xl font-bold flex items-center space-x-2">
+              <Activity className="w-5 h-5 text-brand-700 dark:text-brand-400" />
+              <span>Real-Time Admin Action Audit Trail</span>
+            </h2>
+            {auditLogs.length > 0 && (
+              <button
+                onClick={handleClearLogs}
+                className="text-xs text-red-500 hover:text-red-700 font-bold underline"
+              >
+                Clear Audit History
+              </button>
+            )}
           </div>
+
+          {auditLogs.length === 0 ? (
+            <div className="p-8 text-center text-xs text-stone-400 border border-dashed border-stone-200 dark:border-stone-800 rounded-2xl space-y-1">
+              <CheckCircle2 className="w-6 h-6 text-stone-400 mx-auto opacity-50" />
+              <p className="font-bold text-stone-300">No admin actions recorded yet.</p>
+              <p className="text-[11px]">Perform actions like repositioning a map hotspot or adding/deleting a store to record dynamic logs in real time.</p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {auditLogs.map((log) => (
+                <div key={log.id} className="p-4 rounded-xl bg-editorial-muted dark:bg-stone-900 border border-stone-200 dark:border-stone-800 flex justify-between items-center text-xs">
+                  <div className="space-y-0.5">
+                    <p className="font-bold text-editorial-text dark:text-onyx-text">{log.action}</p>
+                    <p className="text-[11px] text-stone-500 dark:text-stone-400">User: {log.user}</p>
+                  </div>
+                  <span className="text-[11px] text-brand-700 dark:text-brand-400 font-extrabold font-mono">{log.time}</span>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
 

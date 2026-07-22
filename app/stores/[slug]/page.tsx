@@ -3,10 +3,10 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useParams, notFound } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { INITIAL_STORES, INITIAL_OFFERS } from '@/lib/data';
 import FloorMap from '@/components/FloorMap';
-import { MapPin, Clock, Phone, Tag, ArrowLeft, ExternalLink, Star } from 'lucide-react';
+import { MapPin, Clock, Phone, Tag, ArrowLeft } from 'lucide-react';
 
 export default function StoreDetailPage() {
   const params = useParams();
@@ -41,7 +41,7 @@ export default function StoreDetailPage() {
       </Link>
 
       {/* Store Banner & Bio Header */}
-      <div className="bg-editorial-card dark:bg-onyx-card border border-editorial-border dark:border-onyx-border rounded-3xl overflow-hidden shadow-xl grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div className="bg-editorial-card dark:bg-onyx-card border border-stone-200 dark:border-stone-800 rounded-3xl overflow-hidden shadow-xl grid grid-cols-1 lg:grid-cols-12 gap-8">
         
         {/* Store Photo */}
         <div className="lg:col-span-6 relative aspect-[16/10] lg:aspect-auto min-h-[300px]">
@@ -70,28 +70,30 @@ export default function StoreDetailPage() {
               {store.name}
             </h1>
 
-            <p className="text-base font-medium text-brand-700 dark:text-brand-400">
-              "{store.tagline}"
-            </p>
+            {store.tagline && (
+              <p className="text-base font-medium text-brand-700 dark:text-brand-400">
+                "{store.tagline}"
+              </p>
+            )}
 
             <p className="text-sm text-editorial-subtext dark:text-onyx-subtext leading-relaxed">
               {store.description}
             </p>
           </div>
 
-          <div className="pt-4 border-t border-editorial-border dark:border-onyx-border grid grid-cols-2 gap-4 text-xs">
+          <div className="pt-4 border-t border-stone-200 dark:border-stone-800 grid grid-cols-2 gap-4 text-xs">
             <div className="space-y-1">
               <span className="text-stone-400 block">Operating Hours:</span>
               <span className="font-bold flex items-center space-x-1">
-                <Clock className="w-3.5 h-3.5 text-brand-700" />
+                <Clock className="w-3.5 h-3.5 text-brand-700 dark:text-brand-400" />
                 <span>{store.hours}</span>
               </span>
             </div>
             <div className="space-y-1">
               <span className="text-stone-400 block">Contact Desk:</span>
               <span className="font-bold flex items-center space-x-1">
-                <Phone className="w-3.5 h-3.5 text-brand-700" />
-                <span>{store.phone}</span>
+                <Phone className="w-3.5 h-3.5 text-brand-700 dark:text-brand-400" />
+                <span>{store.phone || '+91 62877 76111'}</span>
               </span>
             </div>
           </div>
@@ -102,26 +104,30 @@ export default function StoreDetailPage() {
       {/* Active Offers for this Store */}
       {storeOffers.length > 0 && (
         <div className="space-y-4">
-          <h2 className="font-heading text-2xl font-bold">Active Store Promotions</h2>
+          <h2 className="font-heading text-xl font-bold flex items-center space-x-2">
+            <Tag className="w-5 h-5 text-brand-700 dark:text-brand-400" />
+            <span>Active Deals at {store.name}</span>
+          </h2>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {storeOffers.map((offer) => (
-              <div key={offer.id} className="p-5 rounded-2xl bg-brand-50/60 dark:bg-onyx-card border border-brand-200 dark:border-onyx-border space-y-2">
-                <div className="flex justify-between items-start">
-                  <h3 className="font-heading text-base font-bold">{offer.title}</h3>
-                  <span className="bg-brand-700 text-white text-xs font-bold px-2 py-0.5 rounded">
-                    {offer.discount}
-                  </span>
+            {storeOffers.map(offer => (
+              <div key={offer.id} className="p-4 rounded-2xl bg-editorial-muted dark:bg-stone-900 border border-stone-200 dark:border-stone-800 flex justify-between items-center text-xs">
+                <div>
+                  <h4 className="font-bold text-editorial-text dark:text-onyx-text">{offer.title}</h4>
+                  <p className="text-[11px] text-stone-400">{offer.validTill}</p>
                 </div>
-                <p className="text-xs text-stone-500">{offer.validTill}</p>
+                <span className="bg-brand-700 text-white font-bold px-3 py-1 rounded-lg">
+                  {offer.discount}
+                </span>
               </div>
             ))}
           </div>
         </div>
       )}
 
-      {/* Map Location Pin Highlight */}
+      {/* Floor Map Location Highlight */}
       <div className="space-y-4">
-        <h2 className="font-heading text-2xl font-bold">Store Location on Mall Map</h2>
+        <h2 className="font-heading text-xl font-bold">Store Location on Interactive Map</h2>
         <FloorMap highlightStoreId={store.id} />
       </div>
 

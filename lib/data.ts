@@ -1,62 +1,55 @@
+// Bokaro Mall - Data Layer & Single Source of Truth
+
 export interface Store {
   id: string;
   name: string;
   category: 'fashion' | 'electronics' | 'dining' | 'entertainment' | 'beauty' | 'hypermarket' | 'hospitality';
-  floor: 'Ground' | '1st Floor' | '2nd Floor' | '3rd Floor' | 'East Wing';
-  logo: string;
-  image: string;
-  tagline: string;
-  description: string;
+  floor: 'Ground' | '1st Floor' | '2nd Floor' | '3rd Floor';
+  logo?: string;
+  tagline?: string;
   hours: string;
-  phone: string;
-  mapHotspot: { x: number; y: number }; // Percentage coordinates for SVG Map sync
-  offersCount?: number;
+  phone?: string;
+  description: string;
+  image: string;
+  mapHotspot: { x: number; y: number }; // X and Y percentages (0-100) on floor map
   isAnchor?: boolean;
+  offersCount?: number;
 }
 
-export interface MallEvent {
+export interface EventItem {
   id: string;
   title: string;
-  category: 'Cultural' | 'Shopping Festival' | 'Cinema Release' | 'Dining Special';
   date: string;
   time: string;
   location: string;
+  category: string;
   image: string;
   description: string;
-  isFeatured?: boolean;
 }
 
-export interface SpecialOffer {
+export interface OfferItem {
   id: string;
-  storeId: string;
   storeName: string;
+  storeId?: string;
   title: string;
   discount: string;
-  validTill: string;
   code?: string;
-  image: string;
+  validTill: string;
 }
 
 export const MALL_INFO = {
   name: "Bokaro Mall",
-  tagline: "The Premier Shopping, Dining & Entertainment Destination of Bokaro",
-  developer: "Amit Realty & Amrit Housing",
   address: "Sector III/C, Bokaro Steel City, Jharkhand - 827003, India",
   phone: "+91 62877 76111",
   email: "helpdeskbokaro@amitreallty.com",
-  hours: "11:00 AM – 9:30 PM (Sun–Sat)",
-  cinemaHours: "10:00 AM – 11:30 PM",
-  parkingSlots: {
-    total: 1200,
-    available: 342,
-    floors: ["Basement 1", "Basement 2", "Open Deck"]
-  },
+  developer: "Amit Realty",
+  hours: "11:00 AM – 9:30 PM (Daily)",
   socials: {
-    facebook: "https://www.facebook.com/MyBokaroMall",
-    instagram: "https://www.instagram.com/thebokaromall/",
-    youtube: "https://www.youtube.com/@socialmediabokaromall",
-    twitter: "https://x.com/bokaromall",
-    linkedin: "https://www.linkedin.com/company/27941627/"
+    facebook: "https://facebook.com/bokaromall",
+    instagram: "https://instagram.com/bokaromall",
+    youtube: "https://youtube.com/bokaromall",
+    twitter: "https://twitter.com/bokaromall",
+    linkedin: "https://linkedin.com/company/amitrealty"
   }
 };
 
@@ -66,274 +59,177 @@ export const INITIAL_STORES: Store[] = [
     name: "Reliance Smart Bazaar",
     category: "hypermarket",
     floor: "Ground",
-    logo: "https://images.unsplash.com/photo-1578916171728-46686eac8d58?q=80&w=200&auto=format&fit=crop",
-    image: "https://images.unsplash.com/photo-1578916171728-46686eac8d58?q=80&w=1200&auto=format&fit=crop",
-    tagline: "One-stop destination for grocery, home essentials & daily needs.",
-    description: "Reliance Smart Bazaar offers an unbeatable shopping experience in Bokaro Mall, featuring fresh produce, packaged foods, apparel, homeware, and electronics at everyday lowest prices.",
+    tagline: "Jharkhand's Largest Hypermarket & Superstore",
     hours: "10:00 AM – 10:00 PM",
     phone: "+91 62877 76111",
+    description: "Your one-stop hypermarket for daily groceries, fresh produce, electronics, home decor, and general merchandise at unbelievable prices.",
+    image: "https://images.unsplash.com/photo-1578916171728-46686eac8d58?q=80&w=1000&auto=format&fit=crop",
     mapHotspot: { x: 25, y: 35 },
-    offersCount: 3,
-    isAnchor: true
+    isAnchor: true,
+    offersCount: 2
   },
   {
     id: "pantaloons",
     name: "Pantaloons",
     category: "fashion",
     floor: "Ground",
-    logo: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=200&auto=format&fit=crop",
-    image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=1200&auto=format&fit=crop",
-    tagline: "Trendy fashion apparel for women, men & kids.",
-    description: "Pantaloons at Bokaro Mall brings top ethnic, western, footwear, and accessory brands together under one spacious, vibrant flagship department store.",
-    hours: "11:00 AM – 9:30 PM",
+    tagline: "Trendy Western & Ethnic Fashion Destination",
+    hours: "11:00 AM – 09:30 PM",
     phone: "+91 62877 76112",
-    mapHotspot: { x: 70, y: 30 },
-    offersCount: 2,
-    isAnchor: true
+    description: "Explore latest apparel trends for men, women, and kids from leading Indian and international fashion brands.",
+    image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=1000&auto=format&fit=crop",
+    mapHotspot: { x: 75, y: 35 },
+    isAnchor: true,
+    offersCount: 1
   },
   {
     id: "max-fashion",
     name: "Max Fashion",
     category: "fashion",
     floor: "1st Floor",
-    logo: "https://images.unsplash.com/photo-1445205170230-053b83016050?q=80&w=200&auto=format&fit=crop",
-    image: "https://images.unsplash.com/photo-1445205170230-053b83016050?q=80&w=1200&auto=format&fit=crop",
-    tagline: "Everyday stylish fashion for the modern family.",
-    description: "Max Fashion offers high-style clothing, footwear, and accessories crafted for dynamic urban lifestyles with continuous fresh wardrobe collections.",
-    hours: "11:00 AM – 9:30 PM",
+    tagline: "Everyday Affordable Style & Footwear",
+    hours: "11:00 AM – 09:30 PM",
     phone: "+91 62877 76113",
-    mapHotspot: { x: 30, y: 55 },
-    offersCount: 1,
-    isAnchor: true
-  },
-  {
-    id: "reliance-trends",
-    name: "Reliance Trends",
-    category: "fashion",
-    floor: "1st Floor",
-    logo: "https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?q=80&w=200&auto=format&fit=crop",
-    image: "https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?q=80&w=1200&auto=format&fit=crop",
-    tagline: "India's favorite apparel & fashion store.",
-    description: "Trends features democratized fashion with exclusive domestic and global brands across ethnic wear, denim, formal wear, and casual weekend attire.",
-    hours: "11:00 AM – 9:30 PM",
-    phone: "+91 62877 76114",
-    mapHotspot: { x: 75, y: 60 },
-    offersCount: 2
-  },
-  {
-    id: "manyavar",
-    name: "Manyavar Mohey",
-    category: "fashion",
-    floor: "2nd Floor",
-    logo: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=200&auto=format&fit=crop",
-    image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=1200&auto=format&fit=crop",
-    tagline: "Timeless Indian wedding & festive couture.",
-    description: "Celebrated Indian celebration wear featuring handcrafted sherwanis, bandhgalas, bridal lehengas, and festive kurtas.",
-    hours: "11:00 AM – 9:30 PM",
-    phone: "+91 62877 76115",
-    mapHotspot: { x: 20, y: 40 },
-    offersCount: 1
-  },
-  {
-    id: "reliance-digital",
-    name: "Reliance Digital",
-    category: "electronics",
-    floor: "1st Floor",
-    logo: "https://images.unsplash.com/photo-1526738549149-8e07eca6c147?q=80&w=200&auto=format&fit=crop",
-    image: "https://images.unsplash.com/photo-1526738549149-8e07eca6c147?q=80&w=1200&auto=format&fit=crop",
-    tagline: "Personalized consumer electronics & smart gadgets destination.",
-    description: "Bokaro's largest tech hub carrying laptops, smartphones, 4K TVs, home appliances, audio gear, and personal care tech with expert live demos.",
-    hours: "11:00 AM – 9:30 PM",
-    phone: "+91 62877 76116",
-    mapHotspot: { x: 50, y: 25 }
-  },
-  {
-    id: "hp-world",
-    name: "HP World Store",
-    category: "electronics",
-    floor: "1st Floor",
-    logo: "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?q=80&w=200&auto=format&fit=crop",
-    image: "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?q=80&w=1200&auto=format&fit=crop",
-    tagline: "Official HP laptops, gaming PCs & accessories experience center.",
-    description: "Explore the latest HP Spectre, Envy, OMEN gaming laptops, Smart Tank printers, and genuine HP accessories.",
-    hours: "11:00 AM – 9:30 PM",
-    phone: "+91 62877 76117",
-    mapHotspot: { x: 80, y: 25 }
+    description: "Great value fashion collections for the whole family with contemporary designs across clothing and accessories.",
+    image: "https://images.unsplash.com/photo-1445205170230-053b83016050?q=80&w=1000&auto=format&fit=crop",
+    mapHotspot: { x: 30, y: 40 },
+    isAnchor: true,
+    offersCount: 3
   },
   {
     id: "pvr-cinemas",
-    name: "PVR Cinemas (4 Screens)",
+    name: "PVR Cinemas",
     category: "entertainment",
     floor: "3rd Floor",
-    logo: "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=200&auto=format&fit=crop",
-    image: "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=1200&auto=format&fit=crop",
-    tagline: "Premium multiplex cinema with Dolby Atmos sound & plush seating.",
-    description: "Experience blockbusters in 4D acoustic luxury, featuring 4 screens, ergonomic recliners, gourmet snacks, and seamless digital booking.",
-    hours: "10:00 AM – 11:30 PM",
-    phone: "+91 62877 76118",
-    mapHotspot: { x: 45, y: 70 },
-    offersCount: 1,
+    tagline: "4-Screen Multiplex with Dolby Atmos Sound",
+    hours: "11:00 AM – 11:30 PM",
+    phone: "+91 62877 76114",
+    description: "Catch the latest Bollywood, Hollywood, and regional blockbusters in plush recliners with state-of-the-art Dolby Atmos audio.",
+    image: "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=1000&auto=format&fit=crop",
+    mapHotspot: { x: 78, y: 25 },
     isAnchor: true
   },
   {
-    id: "fun-city",
-    name: "Fun City Game Zone",
-    category: "entertainment",
+    id: "lemon-tree-hotel",
+    name: "Lemon Tree Hotel",
+    category: "hospitality",
     floor: "3rd Floor",
-    logo: "https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=200&auto=format&fit=crop",
-    image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1200&auto=format&fit=crop",
-    tagline: "Arcade, VR simulators, bowling & soft play zone for kids.",
-    description: "The ultimate family entertainment center in Bokaro Mall, complete with prize redemption arcade games, bumper cars, and birthday party arenas.",
-    hours: "11:00 AM – 9:30 PM",
-    phone: "+91 62877 76119",
-    mapHotspot: { x: 80, y: 70 }
+    tagline: "4-Star Hospitality & Banquet Suites",
+    hours: "24 Hours Open",
+    phone: "+91 62877 76115",
+    description: "Upscale 4-star hotel integrated into Bokaro Mall, featuring luxury rooms, conference halls, and fine dining.",
+    image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=1000&auto=format&fit=crop",
+    mapHotspot: { x: 80, y: 70 },
+    isAnchor: true
+  },
+  {
+    id: "kfc",
+    name: "KFC",
+    category: "dining",
+    floor: "3rd Floor",
+    tagline: "Finger Lickin' Good Fried Chicken",
+    hours: "11:00 AM – 10:30 PM",
+    phone: "+91 62877 76116",
+    description: "Original recipe fried chicken, burgers, popcorn chicken, and refreshing beverages at our 3rd floor food court.",
+    image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=1000&auto=format&fit=crop",
+    mapHotspot: { x: 20, y: 75 }
   },
   {
     id: "pizza-hut",
     name: "Pizza Hut",
     category: "dining",
     floor: "3rd Floor",
-    logo: "https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=200&auto=format&fit=crop",
-    image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=1200&auto=format&fit=crop",
-    tagline: "Pan pizzas, pastas, wings & garlic breads.",
-    description: "Sit-down casual dining restaurant offering signature pan pizzas, cheesy crusts, fresh salads, and refreshing coolers.",
+    tagline: "Pan Pizzas & Italian Pastas",
     hours: "11:00 AM – 10:30 PM",
-    phone: "+91 62877 76120",
-    mapHotspot: { x: 25, y: 25 },
-    offersCount: 1
+    phone: "+91 62877 76117",
+    description: "Delicious signature pan pizzas, garlic breadsticks, pastas, and desserts for family dining.",
+    image: "https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?q=80&w=1000&auto=format&fit=crop",
+    mapHotspot: { x: 40, y: 75 }
   },
   {
-    id: "kfc",
-    name: "KFC Restaurant",
-    category: "dining",
-    floor: "3rd Floor",
-    logo: "https://images.unsplash.com/photo-1513639776629-7b61b0ac49cb?q=80&w=200&auto=format&fit=crop",
-    image: "https://images.unsplash.com/photo-1513639776629-7b61b0ac49cb?q=80&w=1200&auto=format&fit=crop",
-    tagline: "Finger lickin' good fried chicken, burgers & rice bowls.",
-    description: "Famous secret recipe fried chicken, Zinger burgers, popcorn chicken, and Krushers served hot in Bokaro Mall's food court.",
-    hours: "11:00 AM – 10:30 PM",
-    phone: "+91 62877 76121",
-    mapHotspot: { x: 40, y: 25 }
-  },
-  {
-    id: "cafe-coffee-day",
-    name: "Cafe Coffee Day",
-    category: "dining",
-    floor: "3rd Floor",
-    logo: "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?q=80&w=200&auto=format&fit=crop",
-    image: "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?q=80&w=1200&auto=format&fit=crop",
-    tagline: "A lot can happen over coffee.",
-    description: "Cozy café space serving hand-crafted espresso coffees, frappes, hot teas, sandwiches, and chocolate cakes.",
-    hours: "11:00 AM – 9:30 PM",
-    phone: "+91 62877 76122",
-    mapHotspot: { x: 55, y: 25 }
-  },
-  {
-    id: "chatori-chaupal",
-    name: "Chatori & Chaupal Food Court",
-    category: "dining",
-    floor: "3rd Floor",
-    logo: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=200&auto=format&fit=crop",
-    image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=1200&auto=format&fit=crop",
-    tagline: "Authentic Indian street food, thalis & regional savories.",
-    description: "Generous Indian food court section serving chole bhature, pav bhaji, momos, South Indian dosas, and fresh lassis.",
-    hours: "11:00 AM – 10:00 PM",
-    phone: "+91 62877 76123",
-    mapHotspot: { x: 70, y: 25 }
-  },
-  {
-    id: "sugar-cosmetics",
-    name: "Sugar Cosmetics & Beauty",
-    category: "beauty",
-    floor: "2nd Floor",
-    logo: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?q=80&w=200&auto=format&fit=crop",
-    image: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?q=80&w=1200&auto=format&fit=crop",
-    tagline: "High-performance makeup & skincare essentials.",
-    description: "Boutique beauty store featuring long-lasting lipsticks, foundations, eye makeup, and clean skincare line.",
-    hours: "11:00 AM – 9:30 PM",
-    phone: "+91 62877 76124",
+    id: "reliance-trends",
+    name: "Reliance Trends",
+    category: "fashion",
+    floor: "1st Floor",
+    tagline: "India's Favorite Fashion Store",
+    hours: "11:00 AM – 09:30 PM",
+    description: "A wide variety of high-fashion apparel and accessories catering to women, men, and kids at democratic pricing.",
+    image: "https://images.unsplash.com/photo-1472851294608-062f824d29cc?q=80&w=1000&auto=format&fit=crop",
     mapHotspot: { x: 60, y: 40 }
   },
   {
-    id: "lemon-tree-hotel",
-    name: "Lemon Tree Hotel",
-    category: "hospitality",
-    floor: "East Wing",
-    logo: "https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=200&auto=format&fit=crop",
-    image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=1200&auto=format&fit=crop",
-    tagline: "4-Star Upscale Hospitality Integrated with Bokaro Mall.",
-    description: "Features contemporary guest rooms, fine-dining Citrus Café, fitness pool, and full banquet facilities seamlessly connected to Bokaro Mall.",
-    hours: "24 Hours Service",
-    phone: "+91 62877 76125",
-    mapHotspot: { x: 90, y: 50 },
-    isAnchor: true
+    id: "manyavar",
+    name: "Manyavar & Mohey",
+    category: "fashion",
+    floor: "2nd Floor",
+    tagline: "Traditional & Wedding Ethnic Wear",
+    hours: "11:00 AM – 09:30 PM",
+    description: "Premium sherwanis, kurtas, Indo-western suits, and bridal lehengas for grand celebrations.",
+    image: "https://images.unsplash.com/photo-1583391733956-6c78276477e2?q=80&w=1000&auto=format&fit=crop",
+    mapHotspot: { x: 25, y: 55 }
+  },
+  {
+    id: "sugar-cosmetics",
+    name: "Sugar Cosmetics",
+    category: "beauty",
+    floor: "Ground",
+    tagline: "Bold & High-Performance Makeup",
+    hours: "11:00 AM – 09:30 PM",
+    description: "Cruelty-free, high-pigment cosmetics and skincare products tailored for modern Indian beauty enthusiasts.",
+    image: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?q=80&w=1000&auto=format&fit=crop",
+    mapHotspot: { x: 50, y: 25 }
   }
 ];
 
-export const INITIAL_EVENTS: MallEvent[] = [
+export const INITIAL_EVENTS: EventItem[] = [
   {
-    id: "festive-shopping-carnival",
-    title: "Bokaro Grand Shopping Carnival 2026",
-    category: "Shopping Festival",
-    date: "AUG 15 - AUG 25, 2026",
-    time: "11:00 AM Onwards",
-    location: "Central Atrium & All Floors",
-    image: "https://images.unsplash.com/photo-1513151233558-d860c5398176?q=80&w=1200&auto=format&fit=crop",
-    description: "Shop for ₹3,000+ across any store in Bokaro Mall to enter daily lucky draws for gold coins, LED TVs, and a bumper car prize! Live music performances every weekend.",
-    isFeatured: true
+    id: "monsoon-shopping-fest",
+    title: "Monsoon Fashion Carnival 2026",
+    date: "July 25 – August 10, 2026",
+    time: "11:00 AM onwards",
+    location: "Central Atrium, Ground Floor",
+    category: "Shopping Fest",
+    image: "https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1000&auto=format&fit=crop",
+    description: "Exclusive discounts up to 50% off across 100+ top fashion brands. Stand a chance to win mega prizes on every purchase."
   },
   {
-    id: "monsoon-food-fest",
-    title: "Chaupal Monsoon Street Food Fest",
-    category: "Dining Special",
-    date: "JUL 28 - AUG 05, 2026",
-    time: "01:00 PM – 09:30 PM",
-    location: "3rd Floor Food Court",
-    image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=1200&auto=format&fit=crop",
-    description: "Savor artisanal hot jalebis, kulhad chai, crispy pakoras, and fusion street delicacies prepared live by master chefs.",
-    isFeatured: true
-  },
-  {
-    id: "pvr-blockbuster-weekend",
-    title: "PVR Dolby Atmos Blockbuster Week",
+    id: "pvr-blockbuster-premiere",
+    title: "PVR Blockbuster Premiere Night",
+    date: "Every Friday Evening",
+    time: "06:30 PM & 09:30 PM",
+    location: "PVR Cinemas, 3rd Floor",
     category: "Cinema Release",
-    date: "JUL 25 - JUL 31, 2026",
-    time: "Multiple Showtimes",
-    location: "PVR Multiplex 3rd Floor",
-    image: "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=1200&auto=format&fit=crop",
-    description: "Catch the biggest summer action releases with complimentary popcorn upgrades on all morning shows."
+    image: "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=1000&auto=format&fit=crop",
+    description: "Experience new movie releases with Dolby Atmos sound and complimentary popcorn upgrades."
   }
 ];
 
-export const INITIAL_OFFERS: SpecialOffer[] = [
+export const INITIAL_OFFERS: OfferItem[] = [
   {
-    id: "pantaloons-flat-40",
-    storeId: "pantaloons",
+    id: "offer-1",
     storeName: "Pantaloons",
-    title: "End of Season Super Sale",
-    discount: "FLAT 40% OFF",
-    validTill: "Valid till Aug 15",
+    storeId: "pantaloons",
+    title: "Flat 40% Off on Monsoon Trends",
+    discount: "40% OFF",
     code: "BOKARO40",
-    image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=600&auto=format&fit=crop"
+    validTill: "Valid till Aug 15"
   },
   {
-    id: "reliance-smart-grocery",
-    storeId: "reliance-smart-bazaar",
+    id: "offer-2",
     storeName: "Reliance Smart Bazaar",
-    title: "Monthly Grocery Savings Fest",
-    discount: "UP TO 50% OFF",
-    validTill: "Valid till Aug 05",
+    storeId: "reliance-smart-bazaar",
+    title: "Buy 1 Get 1 Free on Select Groceries",
+    discount: "BUY 1 GET 1",
     code: "SMART50",
-    image: "https://images.unsplash.com/photo-1578916171728-46686eac8d58?q=80&w=600&auto=format&fit=crop"
+    validTill: "Valid till July 31"
   },
   {
-    id: "pizza-hut-combo",
-    storeId: "pizza-hut",
-    storeName: "Pizza Hut",
-    title: "Family Meal Pizza Combo",
-    discount: "BUY 1 GET 1 FREE",
-    validTill: "Valid on Weekdays",
-    code: "PIZZAHUTBOGO",
-    image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=600&auto=format&fit=crop"
+    id: "offer-3",
+    storeName: "Max Fashion",
+    storeId: "max-fashion",
+    title: "Flat ₹500 Cashback on ₹2999 Spend",
+    discount: "₹500 OFF",
+    code: "MAX500",
+    validTill: "Valid till Aug 05"
   }
 ];
