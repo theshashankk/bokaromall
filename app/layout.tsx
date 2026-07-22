@@ -1,9 +1,21 @@
 import type { Metadata } from 'next';
-import { Syne, Jost } from 'next/font/google';
+import { Cinzel, Plus_Jakarta_Sans, Syne } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@/lib/theme-context';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+
+const cinzel = Cinzel({
+  subsets: ['latin'],
+  variable: '--font-cinzel',
+  display: 'swap',
+});
+
+const plusJakarta = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  variable: '--font-plus-jakarta',
+  display: 'swap',
+});
 
 const syne = Syne({
   subsets: ['latin'],
@@ -11,16 +23,10 @@ const syne = Syne({
   display: 'swap',
 });
 
-const jost = Jost({
-  subsets: ['latin'],
-  variable: '--font-jost',
-  display: 'swap',
-});
-
 export const metadata: Metadata = {
-  title: 'Bokaro Mall | Premier Shopping & Entertainment Hub in Bokaro Steel City',
-  description: 'Official website of Bokaro Mall. Discover 150+ flagship stores, 4-screen PVR multiplex cinema, gourmet dining, and integrated 4-star Lemon Tree hotel hospitality in Bokaro Steel City, Jharkhand.',
-  keywords: ['Bokaro Mall', 'Bokaro Shopping Mall', 'PVR Bokaro', 'Reliance Smart Bazaar Bokaro', 'Lemon Tree Hotel Bokaro', 'Jharkhand Shopping Mall'],
+  title: 'Bokaro Mall | Luxury Shopping, Dining & Entertainment Destination',
+  description: 'Official portal of Bokaro Mall. Discover 150+ flagship stores, 4-screen PVR multiplex cinema, gourmet food court, and integrated 4-star Lemon Tree hotel in Bokaro Steel City.',
+  keywords: ['Bokaro Mall', 'Bokaro Shopping Mall', 'PVR Bokaro', 'Reliance Smart Bazaar Bokaro', 'Lemon Tree Hotel Bokaro', 'Jharkhand Mall'],
 };
 
 export default function RootLayout({
@@ -29,8 +35,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${syne.variable} ${jost.variable}`} suppressHydrationWarning>
-      <body className="min-h-screen flex flex-col antialiased selection:bg-brand-700 selection:text-white">
+    <html lang="en" className={`${cinzel.variable} ${plusJakarta.variable} ${syne.variable}`} suppressHydrationWarning>
+      <body className="min-h-screen flex flex-col antialiased selection:bg-brand-700 selection:text-white bg-editorial-canvas dark:bg-onyx-canvas text-editorial-text dark:text-onyx-text transition-colors duration-300">
         <ThemeProvider>
           <Navbar />
           <main className="flex-1">

@@ -5,14 +5,14 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { motion, useReducedMotion } from 'framer-motion';
 import { 
-  ShoppingBag, 
   MapPin, 
-  Film, 
   Sparkles, 
   ChevronRight, 
   ChevronLeft,
   ArrowRight,
-  ExternalLink
+  ExternalLink,
+  ShieldCheck,
+  Compass
 } from 'lucide-react';
 
 const HERO_SLIDES = [
@@ -62,13 +62,13 @@ export default function Hero() {
   const slide = HERO_SLIDES[currentSlide];
 
   return (
-    <section className="relative min-h-[85vh] lg:min-h-[90vh] flex flex-col justify-between overflow-hidden bg-stone-950 text-white">
+    <section className="relative min-h-[88vh] lg:min-h-[92vh] flex flex-col justify-between overflow-hidden bg-stone-950 text-white">
       
-      {/* Slide Background Images */}
+      {/* Slide Background Images with Parallax Zoom */}
       {HERO_SLIDES.map((s, idx) => (
         <div 
           key={s.id}
-          className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+          className={`absolute inset-0 transition-opacity duration-1000 ease-out ${
             idx === currentSlide ? 'opacity-100 scale-100' : 'opacity-0 scale-105'
           }`}
           style={{ transitionProperty: 'opacity, transform' }}
@@ -78,37 +78,37 @@ export default function Hero() {
             alt={s.title}
             fill
             priority={idx === 0}
-            className="object-cover object-center"
+            className="object-cover object-center filter brightness-[0.65]"
           />
-          {/* Dark Overlay Tint for High Typography Contrast */}
-          <div className="absolute inset-0 bg-gradient-to-r from-stone-950/90 via-stone-950/70 to-stone-950/40" />
-          <div className="absolute inset-0 bg-gradient-to-t from-stone-950 via-transparent to-stone-950/30" />
+          {/* Apple-Style Dark Gradient Scrollytelling Tint */}
+          <div className="absolute inset-0 bg-gradient-to-r from-stone-950 via-stone-950/70 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-stone-950 via-transparent to-stone-950/40" />
         </div>
       ))}
 
       {/* Hero Content Container */}
       <div className="container mx-auto px-4 md:px-6 relative z-10 pt-20 lg:pt-32 pb-16 flex-1 flex flex-col justify-center">
-        <div className="max-w-3xl space-y-6">
+        <div className="max-w-4xl space-y-6">
           
-          {/* Badge */}
+          {/* Eyebrow Badge (Apple Wide Tracking) */}
           <motion.div 
             key={`badge-${currentSlide}`}
             initial={shouldReduceMotion ? false : { opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-brand-700/90 border border-brand-500/30 text-white text-xs font-semibold tracking-wide uppercase backdrop-blur-sm"
+            className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/20 text-white text-xs font-bold uppercase tracking-[0.2em] backdrop-blur-xl"
           >
-            <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+            <Sparkles className="w-3.5 h-3.5 text-gold-400" />
             <span>{slide.badge}</span>
           </motion.div>
 
-          {/* Title */}
+          {/* Title (Apple-Style Giant Gradient Text Clipping) */}
           <motion.h1 
             key={`title-${currentSlide}`}
-            initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
+            initial={shouldReduceMotion ? false : { opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="font-heading text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.1] text-white"
+            className="font-heading text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.08] text-transparent bg-clip-text bg-gradient-to-r from-white via-stone-100 to-brand-300 drop-shadow-2xl"
           >
             {slide.title}
           </motion.h1>
@@ -124,7 +124,7 @@ export default function Hero() {
             {slide.subtitle}
           </motion.p>
 
-          {/* Action CTAs */}
+          {/* Action CTAs (Emil Kowalski Physics) */}
           <motion.div 
             key={`cta-${currentSlide}`}
             initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
@@ -133,66 +133,75 @@ export default function Hero() {
             className="flex flex-wrap items-center gap-4 pt-4"
           >
             {slide.isExternal ? (
-              <a
+              <motion.a
+                whileHover={{ scale: 1.03, transition: { type: "spring", stiffness: 400, damping: 25 } }}
+                whileTap={{ scale: 0.97 }}
                 href={slide.ctaLink}
                 target="_blank"
                 rel="noreferrer"
-                className="bg-brand-700 hover:bg-brand-800 text-white px-7 py-3.5 rounded-xl font-semibold text-base shadow-xl hover:shadow-brand-700/30 transition-all flex items-center space-x-2 group"
+                className="bg-brand-700 hover:bg-brand-800 text-white px-8 py-4 rounded-2xl font-bold text-xs uppercase tracking-wider shadow-2xl flex items-center space-x-2.5"
               >
                 <span>{slide.ctaText}</span>
                 <ExternalLink className="w-4 h-4" />
-              </a>
+              </motion.a>
             ) : (
-              <Link
-                href={slide.ctaLink}
-                className="bg-brand-700 hover:bg-brand-800 text-white px-7 py-3.5 rounded-xl font-semibold text-base shadow-xl hover:shadow-brand-700/30 transition-all flex items-center space-x-2 group"
+              <motion.div
+                whileHover={{ scale: 1.03, transition: { type: "spring", stiffness: 400, damping: 25 } }}
+                whileTap={{ scale: 0.97 }}
               >
-                <span>{slide.ctaText}</span>
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </Link>
+                <Link
+                  href={slide.ctaLink}
+                  className="bg-brand-700 hover:bg-brand-800 text-white px-8 py-4 rounded-2xl font-bold text-xs uppercase tracking-wider shadow-2xl flex items-center space-x-2.5 group"
+                >
+                  <span>{slide.ctaText}</span>
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </Link>
+              </motion.div>
             )}
 
-            <Link
-              href="/visit"
-              className="bg-white/10 hover:bg-white/20 text-white border border-white/20 px-6 py-3.5 rounded-xl font-semibold text-base backdrop-blur-md transition-all flex items-center space-x-2"
+            <motion.div
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
             >
-              <MapPin className="w-4 h-4 text-brand-400" />
-              <span>Interactive Floor Plan</span>
-            </Link>
+              <Link
+                href="/visit"
+                className="bg-white/10 hover:bg-white/20 text-white border border-white/20 px-7 py-4 rounded-2xl font-bold text-xs uppercase tracking-wider backdrop-blur-xl transition-all flex items-center space-x-2.5"
+              >
+                <Compass className="w-4 h-4 text-gold-400" />
+                <span>Interactive Floor Plan</span>
+              </Link>
+            </motion.div>
           </motion.div>
 
         </div>
       </div>
 
-      {/* Slider Controls & Carousel Dots */}
+      {/* Slider Indicators & Controls */}
       <div className="container mx-auto px-4 md:px-6 relative z-10 pb-8 flex items-center justify-between">
-        
-        {/* Slide Indicators */}
         <div className="flex items-center space-x-2">
           {HERO_SLIDES.map((_, idx) => (
             <button
               key={idx}
               onClick={() => setCurrentSlide(idx)}
-              className={`h-2 rounded-full transition-all ${
-                idx === currentSlide ? 'w-8 bg-brand-500' : 'w-2 bg-white/40 hover:bg-white/60'
+              className={`h-2 rounded-full transition-all duration-300 ${
+                idx === currentSlide ? 'w-10 bg-brand-500' : 'w-2 bg-white/30 hover:bg-white/50'
               }`}
               aria-label={`Go to slide ${idx + 1}`}
             />
           ))}
         </div>
 
-        {/* Prev/Next Arrows */}
         <div className="flex items-center space-x-2">
           <button
             onClick={() => setCurrentSlide((prev) => (prev - 1 + HERO_SLIDES.length) % HERO_SLIDES.length)}
-            className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white backdrop-blur-md flex items-center justify-center transition"
+            className="w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 text-white backdrop-blur-xl flex items-center justify-center transition border border-white/10"
             aria-label="Previous slide"
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
           <button
             onClick={() => setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length)}
-            className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white backdrop-blur-md flex items-center justify-center transition"
+            className="w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 text-white backdrop-blur-xl flex items-center justify-center transition border border-white/10"
             aria-label="Next slide"
           >
             <ChevronRight className="w-5 h-5" />
@@ -200,24 +209,24 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* Stats Counter Strip */}
-      <div className="relative z-10 bg-stone-900/90 border-t border-stone-800/80 backdrop-blur-lg py-5">
+      {/* Apple-Style Glass Bento Stats Strip */}
+      <div className="relative z-10 bg-stone-950/80 border-t border-white/10 backdrop-blur-2xl py-6">
         <div className="container mx-auto px-4 md:px-6 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
           <div className="space-y-1">
-            <div className="font-heading text-2xl md:text-3xl font-extrabold text-brand-400">150+</div>
-            <div className="text-xs text-stone-400 uppercase tracking-wider font-medium">Flagship Stores</div>
+            <div className="font-heading text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-brand-400 to-brand-300">150+</div>
+            <div className="text-[11px] text-stone-400 uppercase tracking-[0.15em] font-extrabold">Flagship Stores</div>
           </div>
           <div className="space-y-1">
-            <div className="font-heading text-2xl md:text-3xl font-extrabold text-amber-400">4 Screens</div>
-            <div className="text-xs text-stone-400 uppercase tracking-wider font-medium">PVR Multiplex</div>
+            <div className="font-heading text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-gold-400">4 Screens</div>
+            <div className="text-[11px] text-stone-400 uppercase tracking-[0.15em] font-extrabold">PVR Multiplex</div>
           </div>
           <div className="space-y-1">
-            <div className="font-heading text-2xl md:text-3xl font-extrabold text-emerald-400">30+</div>
-            <div className="text-xs text-stone-400 uppercase tracking-wider font-medium">Dining & Food Outlets</div>
+            <div className="font-heading text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300">30+</div>
+            <div className="text-[11px] text-stone-400 uppercase tracking-[0.15em] font-extrabold">Dining & Food Outlets</div>
           </div>
           <div className="space-y-1">
-            <div className="font-heading text-2xl md:text-3xl font-extrabold text-sky-400">1200+</div>
-            <div className="text-xs text-stone-400 uppercase tracking-wider font-medium">Parking Spaces</div>
+            <div className="font-heading text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-blue-300">1200+</div>
+            <div className="text-[11px] text-stone-400 uppercase tracking-[0.15em] font-extrabold">Parking Spaces</div>
           </div>
         </div>
       </div>
