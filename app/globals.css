@@ -1,0 +1,82 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+:root {
+  --brand-primary: #87161a;
+  --brand-hover: #A91D22;
+  --brand-glow: #C5221F;
+  --header-height: 80px;
+}
+
+/* Global Anti-Layout-Shift & Smooth Scroll */
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  max-width: 100vw;
+  font-family: var(--font-jost), system-ui, -apple-system, sans-serif;
+  background-color: #FBF9F5;
+  color: #1A1615;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Dark Mode Global Overrides */
+.dark body {
+  background-color: #0D0F14;
+  color: #F8FAFC;
+}
+
+/* Custom Luxury Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #F4F0EA;
+}
+.dark ::-webkit-scrollbar-track {
+  background: #161922;
+}
+::-webkit-scrollbar-thumb {
+  background: #87161a;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #A91D22;
+}
+
+/* Typography Headings */
+h1, h2, h3, h4, .font-heading {
+  font-family: var(--font-syne), 'Playfair Display', Georgia, serif;
+}
+
+/* Glassmorphism Classes */
+.glass-card-light {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(230, 224, 216, 0.8);
+}
+
+.glass-card-dark {
+  background: rgba(22, 25, 34, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Reduced Motion Safety */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
